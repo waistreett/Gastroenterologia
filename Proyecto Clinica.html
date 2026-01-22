@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitalCare - Reserva de Citas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8faf9;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .bg-decorative {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .blob-1 {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 40%;
+            height: 40%;
+            background: #a7f3d0;
+            filter: blur(120px);
+            border-radius: 50%;
+        }
+
+        .blob-2 {
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 40%;
+            height: 40%;
+            background: #ccfbf1;
+            filter: blur(120px);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <div class="bg-decorative">
+        <div class="blob-1"></div>
+        <div class="blob-2"></div>
+    </div>
+
+    <!-- Navegación -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-emerald-50 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-emerald-500 p-2 rounded-xl shadow-lg shadow-emerald-200">
+                    <i class="fas fa-heartbeat text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-black tracking-tight text-slate-800 italic">Vital<span class="text-emerald-500">Care</span></span>
+            </div>
+            <button onclick="scrollToReserva()" class="bg-emerald-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-emerald-700 transition shadow-lg shadow-emerald-200">
+                Agendar Ahora
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="relative py-16 overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full w-fit mb-6 text-xs font-bold uppercase tracking-widest border border-emerald-100">
+                    <i class="fas fa-heart text-emerald-500"></i> Cuidamos de ti con alegría
+                </div>
+                <h1 class="text-5xl md:text-6xl font-black text-slate-900 leading-[1.1] mb-8">
+                    Atención médica de <span class="text-emerald-500">calidad</span> que te hace sonreír.
+                </h1>
+                <p class="text-xl text-slate-600 leading-relaxed mb-10 max-w-lg">
+                    Nos enfocamos en tu bienestar integral con un ambiente cálido y médicos expertos para que te sientas como en casa.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-emerald-50">
+                        <i class="fas fa-check-circle text-emerald-500"></i>
+                        <span class="font-bold text-slate-700">Atención Humana</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-emerald-50">
+                        <i class="fas fa-check-circle text-emerald-500"></i>
+                        <span class="font-bold text-slate-700">Sedes Modernas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white group">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000" alt="Doctora sonriente" class="w-full h-[450px] object-cover">
+                    <div class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur p-4 rounded-2xl shadow-xl flex items-center gap-4">
+                        <div class="bg-emerald-500 p-3 rounded-xl text-white text-xl">
+                            <i class="fas fa-notes-medical"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-emerald-600 uppercase">Nuestro Compromiso</p>
+                            <p class="text-sm font-bold text-slate-800 italic">"Tu felicidad es nuestro mejor diagnóstico"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sistema de Reserva -->
+    <section id="reserva" class="py-20">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-black text-slate-900 mb-2">Reserva tu Bienestar</h2>
+                <div class="w-20 h-1.5 bg-emerald-400 mx-auto rounded-full mb-4"></div>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-emerald-50">
+                <!-- Stepper -->
+                <div class="flex bg-slate-50 border-b overflow-x-auto" id="stepper">
+                    <div class="flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-emerald-600 border-b-4 border-emerald-500 bg-white min-w-[100px]" data-step="1">Servicio</div>
+                    <div class="flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-slate-300 min-w-[100px]" data-step="2">Horario</div>
+                    <div class="flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-slate-300 min-w-[100px]" data-step="3">Síntomas</div>
+                    <div class="flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-slate-300 min-w-[100px]" data-step="4">Acceso</div>
+                    <div class="flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-slate-300 min-w-[100px]" data-step="5">Pago</div>
+                </div>
+
+                <div class="p-8 md:p-12">
+                    <!-- Paso 1: Selección de Servicio -->
+                    <div id="step1" class="step-content active">
+                        <h3 class="text-2xl font-bold text-center mb-8">¿Qué tipo de atención necesitas?</h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <button onclick="selectService('Consulta General', 25)" class="p-8 border-2 border-slate-50 rounded-[2rem] text-left hover:border-emerald-400 hover:bg-emerald-50 transition shadow-sm">
+                                <p class="font-bold text-slate-700 mb-2">Consulta General</p>
+                                <p class="text-3xl font-black text-emerald-600">$25</p>
+                            </button>
+                            <button onclick="selectService('Especialidad Médica', 60)" class="p-8 border-2 border-slate-50 rounded-[2rem] text-left hover:border-emerald-400 hover:bg-emerald-50 transition shadow-sm">
+                                <p class="font-bold text-slate-700 mb-2">Especialidad</p>
+                                <p class="text-3xl font-black text-emerald-600">$60</p>
+                            </button>
+                            <button onclick="selectService('Urgencia Preventiva', 95)" class="p-8 border-2 border-slate-50 rounded-[2rem] text-left hover:border-emerald-400 hover:bg-emerald-50 transition shadow-sm">
+                                <p class="font-bold text-slate-700 mb-2">Urgencia</p>
+                                <p class="text-3xl font-black text-emerald-600">$95</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 2: Horarios -->
+                    <div id="step2" class="step-content">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <label class="block text-sm font-bold text-slate-700">Modalidad</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button onclick="setModalidad('virtual')" id="btn-virtual" class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 font-bold">Virtual</button>
+                                    <button onclick="setModalidad('clínica')" id="btn-clinica" class="p-4 rounded-xl border-2 border-slate-100 text-slate-400 font-bold">Clínica</button>
+                                </div>
+                            </div>
+                            <div id="sede-container" class="space-y-4 hidden">
+                                <label class="block text-sm font-bold text-slate-700">Sede</label>
+                                <select id="sede" class="w-full p-4 bg-slate-50 border-0 rounded-xl outline-none">
+                                    <option value="">Seleccionar Sede</option>
+                                    <option>Guayaquil</option>
+                                    <option>Manta</option>
+                                    <option>Portoviejo</option>
+                                </select>
+                            </div>
+                            <div class="space-y-4">
+                                <label class="block text-sm font-bold text-slate-700">Fecha</label>
+                                <input type="date" id="fecha" class="w-full p-4 bg-slate-50 border-0 rounded-xl outline-none">
+                            </div>
+                            <div class="space-y-4">
+                                <label class="block text-sm font-bold text-slate-700">Hora (9:00 AM - 6:00 PM)</label>
+                                <select id="hora" class="w-full p-4 bg-slate-50 border-0 rounded-xl outline-none"></select>
+                            </div>
+                        </div>
+                        <button onclick="goToStep(3)" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-bold mt-8 shadow-xl">Siguiente</button>
+                    </div>
+
+                    <!-- Paso 3: Síntomas -->
+                    <div id="step3" class="step-content">
+                        <h3 class="text-xl font-bold mb-6">¿Cómo te sientes hoy?</h3>
+                        <div id="sintomas-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6"></div>
+                        <textarea id="otros-sintomas" class="w-full p-5 bg-slate-50 rounded-3xl outline-none resize-none border-0" rows="3" placeholder="Detalles adicionales..."></textarea>
+                        <button onclick="goToStep(4)" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-bold mt-8 shadow-xl">Continuar al Registro</button>
+                    </div>
+
+                    <!-- Paso 4: Login -->
+                    <div id="step4" class="step-content max-w-sm mx-auto py-6">
+                        <div class="text-center mb-8">
+                            <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600">
+                                <i class="fas fa-lock text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">Casi terminamos</h3>
+                            <p class="text-slate-400 text-sm">Validemos tu información</p>
+                        </div>
+                        <div class="space-y-4 mb-8">
+                            <input type="email" id="email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl outline-none border-0">
+                            <input type="password" id="pass" placeholder="Contraseña" class="w-full p-4 bg-slate-50 rounded-xl outline-none border-0">
+                        </div>
+                        <button onclick="goToStep(5)" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-bold shadow-xl">Ingresar y Pagar</button>
+                    </div>
+
+                    <!-- Paso 5: Pago -->
+                    <div id="step5" class="step-content max-w-sm mx-auto">
+                        <div id="visual-card" class="bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-900 p-8 rounded-[2rem] text-white shadow-2xl mb-8 flex flex-col justify-between h-52">
+                            <div class="flex justify-between items-start">
+                                <i class="fas fa-credit-card text-3xl opacity-80"></i>
+                                <span class="text-[8px] font-bold tracking-[0.3em] opacity-40">VITALCARE PAY</span>
+                            </div>
+                            <p id="card-display-num" class="text-xl font-mono tracking-[0.2em]">•••• •••• •••• ••••</p>
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <p class="text-[8px] opacity-50 uppercase">Titular</p>
+                                    <p id="card-display-name" class="font-bold text-xs uppercase">PACIENTE</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[8px] opacity-50 uppercase">Expira</p>
+                                    <p id="card-display-exp" class="font-bold text-xs">MM/YY</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <input type="text" id="card-num" placeholder="Número de Tarjeta" maxlength="16" class="w-full p-4 bg-slate-50 rounded-xl outline-none border-0 font-mono">
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="text" id="card-exp" placeholder="MM/YY" maxlength="5" class="w-full p-4 bg-slate-50 rounded-xl outline-none border-0 text-center font-mono">
+                                <input type="password" id="card-cvc" placeholder="CVC" maxlength="4" class="w-full p-4 bg-slate-50 rounded-xl outline-none border-0 text-center font-mono">
+                            </div>
+                        </div>
+                        <button onclick="finishProcess()" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-bold mt-8 shadow-xl text-lg">Pagar Ahora</button>
+                    </div>
+
+                    <!-- Confirmación Final -->
+                    <div id="success" class="step-content text-center py-10">
+                        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-check-double text-3xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-black mb-4">¡Todo Listo!</h2>
+                        <p class="text-slate-500 mb-8">Tu salud está en buenas manos. Recibirás un correo con los detalles.</p>
+                        <button onclick="location.reload()" class="bg-emerald-600 text-white px-10 py-4 rounded-2xl font-bold">Volver al Inicio</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 py-16 text-center text-slate-500">
+        <div class="flex justify-center items-center gap-2 mb-4 opacity-50">
+            <i class="fas fa-heartbeat text-emerald-500 text-2xl"></i>
+            <span class="text-xl font-black text-white italic">VitalCare</span>
+        </div>
+        <p class="text-xs">© 2026 VitalCare • Clínica Médica Profesional</p>
+    </footer>
+
+    <script>
+        let currentData = {
+            servicio: '',
+            precio: 0,
+            modalidad: 'virtual'
+        };
+
+        // Inicializar Horas
+        const selectHora = document.getElementById('hora');
+        for (let h = 9; h <= 18; h++) {
+            let label = h > 12 ? `${h-12}:00 PM` : (h === 12 ? '12:00 PM' : `${h}:00 AM`);
+            let option = new Option(label, `${h}:00`);
+            selectHora.add(option);
+        }
+
+        // Inicializar Síntomas
+        const sintomas = ["Fiebre", "Dolor de cabeza", "Tos seca", "Fatiga", "Mareos", "Dolor de garganta", "Diarrea", "Escalofríos", "Náuseas"];
+        const grid = document.getElementById('sintomas-grid');
+        sintomas.forEach(s => {
+            const btn = document.createElement('button');
+            btn.className = "p-4 text-[11px] font-bold rounded-2xl border-2 border-slate-50 text-left hover:border-emerald-200 transition";
+            btn.innerText = s;
+            btn.onclick = () => btn.classList.toggle('border-emerald-500');
+            btn.onclick = () => {
+                btn.classList.toggle('border-emerald-500');
+                btn.classList.toggle('bg-emerald-50');
+                btn.classList.toggle('text-emerald-700');
+            };
+            grid.appendChild(btn);
+        });
+
+        // Lógica de Pasos
+        function goToStep(step) {
+            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            // Actualizar Stepper
+            const indicators = document.querySelectorAll('#stepper div');
+            indicators.forEach((ind, idx) => {
+                if (idx + 1 === step) {
+                    ind.className = "flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-emerald-600 border-b-4 border-emerald-500 bg-white min-w-[100px]";
+                } else if (idx + 1 < step) {
+                    ind.className = "flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-emerald-600 min-w-[100px]";
+                } else {
+                    ind.className = "flex-1 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-slate-300 min-w-[100px]";
+                }
+            });
+
+            if (step === 5) {
+                const emailUser = document.getElementById('email').value || 'USUARIO';
+                document.getElementById('card-display-name').innerText = emailUser.split('@')[0].toUpperCase();
+            }
+        }
+
+        function selectService(name, price) {
+            currentData.servicio = name;
+            currentData.precio = price;
+            goToStep(2);
+        }
+
+        function setModalidad(m) {
+            currentData.modalidad = m;
+            document.getElementById('btn-virtual').className = m === 'virtual' ? 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 font-bold' : 'p-4 rounded-xl border-2 border-slate-100 text-slate-400 font-bold';
+            document.getElementById('btn-clinica').className = m === 'clínica' ? 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 font-bold' : 'p-4 rounded-xl border-2 border-slate-100 text-slate-400 font-bold';
+            document.getElementById('sede-container').classList.toggle('hidden', m === 'virtual');
+        }
+
+        function finishProcess() {
+            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+            document.getElementById('success').classList.add('active');
+            document.getElementById('stepper').style.display = 'none';
+        }
+
+        function scrollToReserva() {
+            document.getElementById('reserva').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Eventos Tarjeta
+        document.getElementById('card-num').oninput = (e) => {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+            e.target.value = val;
+            document.getElementById('card-display-num').innerText = val.match(/.{1,4}/g)?.join(' ') || '•••• •••• •••• ••••';
+        };
+        document.getElementById('card-exp').oninput = (e) => {
+            document.getElementById('card-display-exp').innerText = e.target.value || 'MM/YY';
+        };
+    </script>
+</body>
+</html>
